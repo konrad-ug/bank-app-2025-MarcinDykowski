@@ -3,7 +3,10 @@ class Account:
         self.first_name = first_name
         self.last_name = last_name
         self.balance = 0
-        if (len(pesel) != 11):
-            self.pesel = "Invalid"
+        self.pesel = pesel if self.is_pesel_valid(pesel) else "Invalid"
+
+    def is_pesel_valid(self, pesel):
+        if isinstance(pesel, str) and len(pesel) == 11:
+            return True
         else:
-            self.pesel = pesel
+            return False
