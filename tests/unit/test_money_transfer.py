@@ -48,3 +48,39 @@ class Test_transfer:
         account.balance = 10000
         account.outgoing_transer(50000)
         assert account.balance == 10000  
+
+    def test_Fast_money_outgoing_Company(self):
+        account = CompanyAccount("Bank_33","1234567890")
+        account.balance = 500
+        account.fast_outgoing_transfer(400)
+        assert account.balance == 95
+ 
+    def test_Fast_money_outgoing_to_much_Company(self):
+        account = CompanyAccount("Bank_33","1234567890")
+        account.balance = 500
+        account.fast_outgoing_transfer(44400)
+        assert account.balance == 500
+
+    def test_Fast_money_outgoing_going_on_minus_Company(self):
+        account = CompanyAccount("Bank_33","1234567890")
+        account.balance = 500
+        account.fast_outgoing_transfer(500)
+        assert account.balance == -5
+
+    def test_Fast_money_outgoing_Personal(self):
+        account = Personal_Account("John", "Doe", "05210700056")
+        account.balance = 500
+        account.fast_outgoing_transfer(400)
+        assert account.balance == 99
+ 
+    def test_Fast_money_outgoing_to_much_Personal(self):
+        account = Personal_Account("John", "Doe", "05210700056")
+        account.balance = 500
+        account.fast_outgoing_transfer(44400)
+        assert account.balance == 500
+
+    def test_Fast_money_outgoing_going_on_minus_Personal(self):
+        account = Personal_Account("John", "Doe", "05210700056")
+        account.balance = 500
+        account.fast_outgoing_transfer(500)
+        assert account.balance == -1
