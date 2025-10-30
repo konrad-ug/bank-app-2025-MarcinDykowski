@@ -1,6 +1,4 @@
 class Account:
-    def __init__(self):
-        pass
 
     def getting_money(self, ammout):
         if (isinstance(ammout, int) == True or isinstance(ammout, float) == True):
