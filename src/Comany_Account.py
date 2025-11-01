@@ -5,6 +5,7 @@ class CompanyAccount(Account):
         self.company_name = company_name
         self.nip = nip
         self.balance = 0
+        self.history = []
 
         if (len(nip) != 10):
             self.nip = "Invalid"

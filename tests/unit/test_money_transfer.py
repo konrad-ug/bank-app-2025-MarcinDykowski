@@ -84,3 +84,18 @@ class Test_transfer:
         account.balance = 500
         account.fast_outgoing_transfer(500)
         assert account.balance == -1
+
+    def test_history_Personal(self):
+        account = Personal_Account("John", "Doe", "05210700056")
+        account.balance = 100
+        account.outgoing_transer(50)
+        account.getting_money(800)
+        account.fast_outgoing_transfer(300)
+        assert account.history == [-50, 800, -300, -1]
+
+    def test_history_Company(self):
+        account = CompanyAccount("Bank_33","1234567890")
+        account.getting_money(50000)
+        account.outgoing_transer(500)
+        account.fast_outgoing_transfer(1000)
+        assert account.history == [50000, -500, -1000, -5]
