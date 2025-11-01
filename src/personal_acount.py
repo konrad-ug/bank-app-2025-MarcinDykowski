@@ -4,11 +4,9 @@ class Personal_Account(Account):
     def __init__(self, first_name, last_name, pesel, promo_code = None):
         self.first_name = first_name
         self.last_name = last_name
-        # print(pesel)
-        # print(promo_code)
         self.balance = 50 if self.is_promo_code(promo_code, pesel) else 0
         self.pesel = pesel if self.is_pesel_valid(pesel) else "Invalid"
-        
+        self.history = []
 
     def is_pesel_valid(self, pesel):
         if isinstance(pesel, str) and len(pesel) == 11:

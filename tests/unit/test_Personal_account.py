@@ -73,3 +73,4 @@ class TestAccount:
             account = Personal_Account("John", "Doe", "05210700056")
             account.balance = 100
             account.outgoing_transer(-50)
+            assert account.balance == 100
