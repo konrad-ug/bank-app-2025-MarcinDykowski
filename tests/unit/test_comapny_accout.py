@@ -5,6 +5,6 @@ class Test_company_acount():
         account = CompanyAccount("BANK_13", "1234567890000")
         assert account.nip == "Invalid"
     
-    def TestCompany_accout_Correct_NIP(self):
+    def test_Company_accout_Correct_NIP(self):
         account = CompanyAccount("BANK_13", "1234567890")
         assert account.nip == "1234567890"       
