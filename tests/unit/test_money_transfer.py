@@ -99,3 +99,49 @@ class Test_transfer:
         account.outgoing_transer(500)
         account.fast_outgoing_transfer(1000)
         assert account.history == [50000, -500, -1000, -5]
+
+    def test_Personal_submit_for_loan_3_getting_money(self):
+        account = Personal_Account("Marcin", "Dykowski", "05210700056")
+        account.getting_money(500)
+        account.getting_money(600)
+        account.getting_money(100)
+        assert account.submit_for_loan(1000000) == True
+
+    def test_Personal_submit_for_loan_2_getting_money_1_outgoing(self):
+        account = Personal_Account("Marcin", "Dykowski", "05210700056")
+        account.getting_money(500)
+        account.outgoing_transer(600)
+        account.getting_money(100)
+        assert account.submit_for_loan(1000000) == False
+
+    def test_Personal_submit_for_loan_2_getting_money(self):
+        account = Personal_Account("Marcin", "Dykowski", "05210700056")
+        account.getting_money(500)
+        account.getting_money(100)
+        assert account.submit_for_loan(1000000) == False
+
+    def test_Personal_submit_for_loan_getting_money_beaing_on_plus(self):
+        account = Personal_Account("Marcin", "Dykowski", "05210700056")
+        account.getting_money(199)
+        account.outgoing_transer(30)
+        account.outgoing_transer(100)
+        account.getting_money(200)
+        account.getting_money(150)
+        assert account.submit_for_loan(200) == True
+
+    def test_Personal_submit_for_loan_2_getting_money_beaing_on_minus(self):
+        account = Personal_Account("Marcin", "Dykowski", "05210700056")
+        account.getting_money(199)
+        account.outgoing_transer(30)
+        account.outgoing_transer(10000)
+        account.getting_money(200)
+        account.getting_money(150)
+        assert account.submit_for_loan(200) == False
+
+    def test_liitle_transactions(self):
+        account = Personal_Account("Marcin", "Dykowski", "05210700056")
+        account.getting_money(199)
+        account.outgoing_transer(30)
+        account.outgoing_transer(10000)
+        account.getting_money(200)
+        assert account.submit_for_loan(200) == False
