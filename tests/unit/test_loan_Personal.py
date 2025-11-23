@@ -1,12 +1,12 @@
-from src.personal_acount import Personal_Account
+from src.personal_acount import PersonalAccount
 import pytest
 
-class Test_transfer:
+class Test_transfer_Personal:
 
     # Fixture tworząca konto i automatycznie przypisywana do self.account
     @pytest.fixture(autouse=True)
     def setup_account(self):
-        self.account = Personal_Account("Marcin", "Dykowski", "05210700056")
+        self.account = PersonalAccount("Marcin", "Dykowski", "05210700056")
 
     def replay_history(self, history):
         #Pomocnicza funkcja do odtwarzania historii transakcji

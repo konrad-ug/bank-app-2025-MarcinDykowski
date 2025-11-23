@@ -1,13 +1,13 @@
-from src.personal_acount import Personal_Account
+from src.personal_acount import PersonalAccount
 from src.Comany_Account import CompanyAccount
+from src.personal_acount import AccountRegistry
 import pytest
-
 
 class TestAccount:
 
     # Test tworzenia konta — bez parametryzacji
     def test_account_creation(self):
-        account = Personal_Account("John", "Doe", "12345678901")
+        account = PersonalAccount("John", "Doe", "12345678901")
         assert account.first_name == "John"
         assert account.last_name == "Doe"
         assert account.balance == 0
@@ -28,7 +28,7 @@ class TestAccount:
         ]
     )
     def test_wrong_pesel(self, pesel):
-        account = Personal_Account("Jane", "Doe", pesel)
+        account = PersonalAccount("Jane", "Doe", pesel)
         assert account.pesel == "Invalid"
 
     # Sparametryzowane testy kodów promocyjnych
@@ -52,5 +52,25 @@ class TestAccount:
         ]
     )
     def test_promo_codes(self, pesel, promo, expected_balance):
-        account = Personal_Account("Jane", "Doe", pesel, promo)
+        account = PersonalAccount("Jane", "Doe", pesel, promo)
         assert account.balance == expected_balance
+
+class Test_AccountRegistry:
+    @pytest.fixture(autouse=True)
+    def setup_account(self):
+        self.All_accounts = AccountRegistry()
+        self.peapole = [PersonalAccount("Marcin", "Dykowski","05210700056"), PersonalAccount("Marcin", "Kowal", "06210700056"), PersonalAccount("Jan", "Nowak", "55210700056")]
+        for i in self.peapole:
+            self.All_accounts.add_account(i) 
+
+    def test_adding_accounts(self):
+        assert self.All_accounts.every_account() == [["Marcin", "Dykowski", "05210700056"], ["Marcin", "Kowal", "06210700056"], ["Jan", "Nowak", "55210700056"]]
+    
+    def test_count_accounts(self):
+        assert self.All_accounts.number_of_accounts() == 3
+
+    def test_search_pesel_correct(self):
+        assert self.All_accounts.search_pesel("05210700056") == ["Marcin", "Dykowski", "05210700056"]
+    
+    def test_search_pesel_incorrect(self):
+        assert self.All_accounts.search_pesel("05200700056") == False

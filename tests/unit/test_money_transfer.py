@@ -1,4 +1,4 @@
-from src.personal_acount import Personal_Account
+from src.personal_acount import PersonalAccount
 from src.Comany_Account import CompanyAccount
 import pytest
 
@@ -9,7 +9,7 @@ class TestPersonalTransfers:
 
     @pytest.fixture(autouse=True)
     def setup_account(self):
-        self.account = Personal_Account("Marcin", "Dykowski", "05210700056")
+        self.account = PersonalAccount("Marcin", "Dykowski", "05210700056")
 
     @pytest.mark.parametrize(
         "transaction_type, amount, start_balance, expected_balance",
@@ -54,7 +54,7 @@ class TestPersonalTransfers:
         assert self.account.balance == expected_balance
 
     def test_history_Personal(self):
-        account = Personal_Account("John", "Doe", "05210700056")
+        account = PersonalAccount("John", "Doe", "05210700056")
         account.balance = 100
         account.outgoing_transer(50)
         account.getting_money(800)
