@@ -20,11 +20,23 @@ class Personal_Account(Account):
         else:
             return False
     
-    def submit_for_loan(self, ammount):
+    def helper_sumbit_for_loan_checks_if_three_last_trasactions_are_on_plus(self):
         if len(self.history) >= 3 and self.history[-1] > 0 and self.history[-2] > 0 and self.history[-3] > 0:
+            return True
+        else:
+            return False
+        
+    def helper_submit_for_loan_checks_if_total_sum_of_last_five_transactions_are_bigger_than_ammount_of_loan(self, ammount):
+        if len(self.history) >= 5 and (self.history[-1] + self.history[-2] + self.history[-3] + self.history[-4] + self.history[-5])>ammount:
+            return True
+        else:
+            return False
+
+    def submit_for_loan(self, ammount):
+        if self.helper_sumbit_for_loan_checks_if_three_last_trasactions_are_on_plus() == True:
             self.balance += ammount
             return True
-        elif len(self.history) >= 5 and (self.history[-1] + self.history[-2] + self.history[-3] + self.history[-4] + self.history[-5])>ammount:
+        elif self.helper_submit_for_loan_checks_if_total_sum_of_last_five_transactions_are_bigger_than_ammount_of_loan(ammount) == True:
             self.balance += ammount
             return True
         else:
