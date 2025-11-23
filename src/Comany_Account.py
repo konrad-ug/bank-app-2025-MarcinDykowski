@@ -9,3 +9,10 @@ class CompanyAccount(Account):
 
         if (len(nip) != 10):
             self.nip = "Invalid"
+    
+    def submit_for_loan(self, ammount):
+        if self.balance > ammount*2 and -1775 in self.history:
+            self.balance += ammount
+            return True
+        else:
+            return False
