@@ -41,22 +41,3 @@ class PersonalAccount(Account):
             return True
         else:
             return False
-
-class AccountRegistry:
-    def __init__(self):
-        self.accounts = []
-
-    def add_account(self, account: PersonalAccount):
-        self.accounts.append(account)
-    
-    def search_pesel(self, pesel):
-        for i in self.accounts:
-            if i.pesel == pesel:
-                return [i.first_name, i.last_name, i.pesel]
-        return False
-
-    def every_account(self):
-        return [[a.first_name, a.last_name, a.pesel] for a in self.accounts]
-
-    def number_of_accounts(self):
-        return len(self.accounts)
