@@ -1,6 +1,6 @@
 from src.personal_acount import PersonalAccount
 from src.Comany_Account import CompanyAccount
-from src.personal_acount import AccountRegistry
+from src.account_registry import AccountRegistry
 import pytest
 
 class TestAccount:
@@ -64,8 +64,17 @@ class Test_AccountRegistry:
             self.All_accounts.add_account(i) 
 
     def test_adding_accounts(self):
-        assert self.All_accounts.every_account() == [["Marcin", "Dykowski", "05210700056"], ["Marcin", "Kowal", "06210700056"], ["Jan", "Nowak", "55210700056"]]
-    
+        actual = []
+        for acc in self.All_accounts.every_account():
+            actual.append([acc.first_name, acc.last_name, acc.pesel])
+
+        expected = [
+            ["Marcin", "Dykowski", "05210700056"], 
+            ["Marcin", "Kowal", "06210700056"], 
+            ["Jan", "Nowak", "55210700056"]
+        ]
+        assert actual == expected
+
     def test_count_accounts(self):
         assert self.All_accounts.number_of_accounts() == 3
 
