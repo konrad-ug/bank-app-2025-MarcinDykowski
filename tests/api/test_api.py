@@ -105,5 +105,3 @@ class TestAPI:
         url_search = f"{self.url}/accounts/55210700056"
         response_2 = requests.get(url_search)
         assert response_2.status_code == 404
-
-    
