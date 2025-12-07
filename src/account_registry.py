@@ -5,8 +5,12 @@ class AccountRegistry:
         self.accounts = []
 
     def add_account(self, account: PersonalAccount):
-        self.accounts.append(account)
-    
+        if (len(self.accounts) == 0 or self.search_pesel(account.pesel) == False):
+            self.accounts.append(account)
+            return True
+        else:
+            return False
+
     def search_pesel(self, pesel):
         for account in self.accounts:
             if account.pesel == pesel:
@@ -33,3 +37,22 @@ class AccountRegistry:
                 self.accounts.remove(account)
                 return "Account deleted"
         return False
+
+    def registry_money(self, pesel, amount, tranfer_type):
+        for account in self.accounts:
+            if account.pesel == pesel:
+                if tranfer_type == "incoming":
+                    account.getting_money(amount)
+                    return True
+                elif tranfer_type == "outgoing" and int(account.balance) >= int(amount):
+                    print("PIESEK")
+                    account.outgoing_transer(amount)
+                    return True
+                elif tranfer_type == "express" and account.balance + 1 >= amount:
+                    account.fast_outgoing_transfer(amount)
+                    return True
+                else:
+                    return False
+            else:
+                return False
+    
