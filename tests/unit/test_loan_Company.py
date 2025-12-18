@@ -1,10 +1,12 @@
 from src.Comany_Account import CompanyAccount
+from unittest.mock import patch, Mock
 import pytest
 
-class Test_transfer_Personal:
+class Test_transfer_Company:
     # paremetry
     @pytest.fixture(autouse=True)
-    def setup_account(self):
+    @patch('src.Comany_Account.CompanyAccount.is_Nip_correct', return_value=True)
+    def setup_account(self, mock_is_Nip_correct):
         self.account = CompanyAccount("KORPORACJA_TEST", "1234567890")
 
     def replay_history(self, history):
@@ -31,7 +33,7 @@ class Test_transfer_Personal:
         ]
     )
     # tests
-    def test_submit_for_loan_parametrized(self, history, amount,expected_result ,expected_balance):
+    def test_submit_for_loan_parametrized(self, history, amount, expected_result ,expected_balance):
         self.replay_history(history)
         result = self.account.submit_for_loan(amount)
         assert result == expected_result
