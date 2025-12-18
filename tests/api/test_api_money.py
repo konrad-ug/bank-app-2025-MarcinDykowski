@@ -63,7 +63,7 @@ class TestAPI:
         }
         response2 = requests.post(url, json=payload2)
   
-        assert response.status_code == 200 
+        assert response2.status_code == 200 
 
     def test_getting_money_outgoing__not_enough_cash(self):
         url = f"{self.url}/accounts/05710700056/transfer"

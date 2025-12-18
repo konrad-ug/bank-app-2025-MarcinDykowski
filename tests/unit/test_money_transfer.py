@@ -1,6 +1,8 @@
+from requests import patch
 from src.personal_acount import PersonalAccount
 from src.Comany_Account import CompanyAccount
 import pytest
+from unittest.mock import patch, Mock
 
 
 #   TESTY KONTA PERSONALNEGO
@@ -67,7 +69,8 @@ class TestPersonalTransfers:
 class TestCompanyTransfers:
 
     @pytest.fixture(autouse=True)
-    def setup_account(self):
+    @patch('src.Comany_Account.CompanyAccount.is_Nip_correct', return_value=True)
+    def setup_account(self, mock_is_Nip_correct):
         self.account = CompanyAccount("BANK_2137", "1234567890")
 
     @pytest.mark.parametrize(
@@ -110,7 +113,8 @@ class TestCompanyTransfers:
         self.account.fast_outgoing_transfer(amount)
         assert self.account.balance == expected_balance
 
-    def test_history_Company(self):
+    @patch('src.Comany_Account.CompanyAccount.is_Nip_correct', return_value=True)
+    def test_history_Company(self, mock_is_Nip_correct):
         account = CompanyAccount("Bank_33", "1234567890")
         account.getting_money(50000)
         account.outgoing_transer(500)
