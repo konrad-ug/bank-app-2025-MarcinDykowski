@@ -1,6 +1,8 @@
 from src.account import Account
 import requests, os
 from datetime import datetime
+from src.smtp.smtp import SMTPClient
+from datetime import datetime
 
 class CompanyAccount(Account):
     def __init__(self, company_name, nip):
@@ -36,3 +38,9 @@ class CompanyAccount(Account):
             return True
         else:
             return False
+    def send_history_via_email(self, email_address) -> bool:
+
+        subject = f"Account Transfer History {datetime.now().strftime('%Y-%m-%d')}"
+        text = f"Company account history: {self.history}"
+        
+        return SMTPClient.send(subject, text, email_address)
