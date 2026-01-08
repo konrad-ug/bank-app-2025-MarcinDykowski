@@ -35,7 +35,8 @@ def get_account_by_pesel(pesel):
         return jsonify({
             "first_name": found_account[0],
             "last_name": found_account[1],
-            "pesel": found_account[2]
+            "pesel": found_account[2],
+            "balance": found_account[3]
         }), 200
 @app.route("/api/accounts/<pesel>", methods=['PATCH'])
 def update_account(pesel):

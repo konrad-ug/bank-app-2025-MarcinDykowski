@@ -79,7 +79,7 @@ class Test_AccountRegistry:
         assert self.All_accounts.number_of_accounts() == 3
 
     def test_search_pesel_correct(self):
-        assert self.All_accounts.search_pesel("05210700056") == ["Marcin", "Dykowski", "05210700056"]
+        assert self.All_accounts.search_pesel("05210700056") == ["Marcin", "Dykowski", "05210700056", 0]
     
     def test_search_pesel_incorrect(self):
         assert self.All_accounts.search_pesel("05200700056") == False
