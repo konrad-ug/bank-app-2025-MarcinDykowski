@@ -2,7 +2,7 @@ import pytest
 import requests
 
 class TestAPI:
-    url = "http://localhost:5000/api"
+    url = "http://127.0.0.1:5000/api"
 
     @pytest.fixture(autouse=True, scope="function")
     def set_up(self):

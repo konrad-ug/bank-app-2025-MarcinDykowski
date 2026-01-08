@@ -14,7 +14,7 @@ class AccountRegistry:
     def search_pesel(self, pesel):
         for account in self.accounts:
             if account.pesel == pesel:
-                return [account.first_name, account.last_name, account.pesel]
+                return [account.first_name, account.last_name, account.pesel, account.balance]
         return False
 
     def every_account(self):
