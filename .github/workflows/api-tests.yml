@@ -1,4 +1,4 @@
-name: API tests
+name: API perf tests
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
         export FLASK_APP=app/api.py
         export FLASK_ENV=development
         export PYTHONPATH=$GITHUB_WORKSPACE
-      flask run &
-      - name: Execute API tests
+        flask run &
+    - name: Execute API tests
       run: |
-        python3 -m pytest tests/api
+        python3 -m pytest tests/perf
