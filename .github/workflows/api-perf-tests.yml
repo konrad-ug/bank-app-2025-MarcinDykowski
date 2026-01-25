@@ -21,7 +21,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: "3.10"
 
@@ -40,11 +40,33 @@ jobs:
         export FLASK_APP=src/app/api.py
         export FLASK_ENV=development
         export PYTHONPATH=$GITHUB_WORKSPACE
-        flask run &
-        sleep 5 # Więcej czasu dla pewności
+        nohup flask run > flask.log 2>&1 &
+        echo $! > flask.pid
+        
+        # Czekamy aż Flask będzie gotowy (max 30 sekund)
+        for i in {1..30}; do
+          if curl -s http://127.0.0.1:5000/api/accounts/count > /dev/null 2>&1; then
+            echo "Flask is ready!"
+            break
+          fi
+          echo "Waiting for Flask to start... ($i/30)"
+          sleep 1
+        done
+        
+        # Sprawdzamy czy Flask faktycznie działa
+        if ! curl -s http://127.0.0.1:5000/api/accounts/count > /dev/null 2>&1; then
+          echo "Flask failed to start!"
+          cat flask.log
+          exit 1
+        fi
 
     - name: Execute API tests
       run: |
         export PYTHONPATH=$GITHUB_WORKSPACE
         # Uruchamiamy zarówno testy API (gdzie jest Mongo), jak i perf
         python3 -m pytest tests/api tests/perf -v
+    
+    - name: Show Flask logs on failure
+      if: failure()
+      run: |
+        if [ -f flask.log ]; then cat flask.log; fi
