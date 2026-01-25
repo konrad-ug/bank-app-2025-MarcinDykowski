@@ -31,26 +31,35 @@ class TestPerfomanceOfCreatingAccounts:
         is_everytime_successful = True
         url = f"{self.url}/accounts"
         payload = {
-                "first_name": "Jan",
-                "last_name": "Dykowski",
-                "pesel": "05210700057"
-            }
-        response = requests.post(url, json=payload)
-        for _ in range(100):
+            "first_name": "Jan",
+            "last_name": "Dykowski",
+            "pesel": "05210700057"
+        }
+        response_create = requests.post(url, json=payload)
+        print(f"CREATE: {response_create.status_code} - {response_create.text}")
+        assert response_create.status_code == 200
+        
+        for i in range(100):
             start = time.time()
-            # getting money
             url = f"{self.url}/accounts/05210700057/transfer"
             payload = {
                 "amount": 500,
                 "type": "incoming"
             }
-            response = requests.post(url, json=payload)
+            response_transfer = requests.post(url, json=payload)
+            print(f"TRANSFER {i}: {response_transfer.status_code} - {response_transfer.text}")
+            
+            if response_transfer.status_code != 200:
+                is_everytime_successful = False
+                
             end = time.time()
             duration = end - start
             if duration > 0.05:
                 is_everytime_successful = False            
-        #gettting account balance to check if money was added
+        
         url_account = f"{self.url}/accounts/05210700057"
         response_account = requests.get(url_account)
-
-        assert is_everytime_successful == True and response_account.json()["balance"] == 50000
+        print(f"FINAL BALANCE: {response_account.json()}")
+        
+        assert is_everytime_successful == True
+        assert response_account.json()["balance"] == 50000  # 50 (start) + 100*500
