@@ -6,39 +6,82 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: read
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
+    # GitHub sam uruchomi kontener z Mongo
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: "3.10"
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
+        pip install flake8 pytest requests pymongo
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Wait for MongoDB to be ready
+      run: |
+        apt-get update && apt-get install -y netcat-traditional
+        for i in {1..60}; do
+          if nc -zv localhost 27017 2>/dev/null; then
+            echo "MongoDB port is open!"
+            break
+          fi
+          echo "Waiting for MongoDB port... ($i/60)"
+          sleep 1
+        done
+        
+        # Dodatkowe czekanie aż mongo będzie w pełni gotowe
+        sleep 5
+
     - name: Lint with flake8
       run: |
-        # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
     - name: Start flask
       run: |
         export FLASK_APP=src/app/api.py
         export FLASK_ENV=development
         export PYTHONPATH=$GITHUB_WORKSPACE
-        flask run &
-        sleep 3
+        nohup flask run > flask.log 2>&1 &
+        echo $! > flask.pid
+        
+        # Czekamy aż Flask będzie gotowy (max 20 sekund)
+        for i in {1..20}; do
+          if curl -s http://127.0.0.1:5000/api/accounts/count > /dev/null 2>&1; then
+            echo "Flask is ready!"
+            break
+          fi
+          echo "Waiting for Flask to start... ($i/20)"
+          sleep 1
+        done
+        
+        # Sprawdzamy czy Flask faktycznie działa
+        if ! curl -s http://127.0.0.1:5000/api/accounts/count > /dev/null 2>&1; then
+          echo "Flask failed to start!"
+          cat flask.log
+          exit 1
+        fi
+
     - name: Execute API tests
       run: |
         export PYTHONPATH=$GITHUB_WORKSPACE
-        python3 -m pytest tests/perf -v
+        # Uruchamiamy zarówno testy API (gdzie jest Mongo), jak i perf
+        python3 -m pytest tests/api tests/perf -v
+    
+    - name: Show Flask logs on failure
+      if: failure()
+      run: |
+        if [ -f flask.log ]; then cat flask.log; fi

@@ -48,4 +48,12 @@ class PersonalAccount(Account):
         subject = f"Account Transfer History {datetime.now().strftime('%Y-%m-%d')}"
         text = f"Personal account history: {self.history}"
         
-        return SMTPClient.send(subject, text, email_address)            
+        return SMTPClient.send(subject, text, email_address)
+    
+    @classmethod
+    def from_dict(cls, data):
+        """Create PersonalAccount from dictionary (e.g., from MongoDB)"""
+        account = cls(data['first_name'], data['last_name'], data['pesel'])
+        account.balance = data.get('balance', account.balance)
+        account.history = data.get('history', [])
+        return account            
